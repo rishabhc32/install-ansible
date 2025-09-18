@@ -4,9 +4,7 @@ branding:
   icon: package
   color: blue
 
-description: |
-  Composite action to install Ansible on GitHub Actions runners using the uv package manager (astral-sh/uv).
-  Installs the Ansible CLI using uv tool (pipx-like) for isolated CLI installs.
+description: Github Action to install Ansible
 
 inputs:
   python-version:
