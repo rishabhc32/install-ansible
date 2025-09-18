@@ -1,5 +1,4 @@
-# Install Ansible via uv
-
+# Install Ansible
 A GitHub Action that installs Ansible. Provides `ansible` and `ansible-playbook` on PATH in seconds.
 
 - Supports installing either the full `ansible` bundle or `ansible-core`.
@@ -10,7 +9,7 @@ A GitHub Action that installs Ansible. Provides `ansible` and `ansible-playbook`
 Quick start:
 
 ```yaml
-name: Use install-ansible via uv
+name: Use install-ansible Github action
 on: [push]
 
 jobs:
@@ -19,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Ansible via uv
+      - name: Install Ansible
         id: ansible
         uses: rishabhc32/install-ansible
         with:
@@ -60,7 +59,7 @@ This action relies on `astral-sh/setup-uv@v6` and works on GitHub-hosted runners
 If you prefer to control uv installation yourself, run `astral-sh/setup-uv@v6` first and skip it in this action:
 
 ```yaml
-- name: Install Ansible via uv tool only
+- name: Install Ansible
   uses: rishabhc32/install-ansible
   with:
     skip-setup-uv: "true"

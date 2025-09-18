@@ -1,5 +1,5 @@
-name: Install Ansible via uv
-author: Spooderman
+name: Install Ansible
+author: rishabhc32
 branding:
   icon: package
   color: blue
