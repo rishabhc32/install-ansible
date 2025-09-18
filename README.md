@@ -32,29 +32,6 @@ jobs:
           ansible-playbook --version
 ```
 
-### Use with your own setup-uv step
-
-If you prefer to control uv installation yourself, run `astral-sh/setup-uv@v6` first and skip it in this action:
-
-```yaml
-jobs:
-  demo:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          python-version: "3.12"
-          version: "0.7.13"
-          enable-cache: false
-      - name: Install Ansible via uv tool only
-        uses: rishabhc32/install-ansible
-        with:
-          skip-setup-uv: "true"
-          ansible-package: "ansible"
-```
-
 ## Inputs
 
 - `python-version` (string, default `"3.12"`)
@@ -80,11 +57,15 @@ This action relies on `astral-sh/setup-uv@v6` and works on GitHub-hosted runners
     ansible-package: "ansible==2.16.6"
 ```
 
+If you prefer to control uv installation yourself, run `astral-sh/setup-uv@v6` first and skip it in this action:
+
+```yaml
+- name: Install Ansible via uv tool only
+  uses: rishabhc32/install-ansible
+  with:
+    skip-setup-uv: "true"
+    ansible-package: "ansible"
+```
+
 ## License
-
-MIT (or your preferred license)
-
-## Notes
-
-- This Action installs Ansible via `uv tool install`, which sets up isolated CLI tools and adds them to PATH. It does not install Python packages into the job’s site-packages.
-- If you need to control uv itself or Python resolution, use the `uv-version` input, or run `astral-sh/setup-uv@v6` yourself and set `skip-setup-uv: "true"`.
+MIT
