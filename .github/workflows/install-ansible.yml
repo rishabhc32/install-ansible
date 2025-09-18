@@ -1,0 +1,25 @@
+name: Install Ansible via uv
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  install-ansible:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Ansible using local action
+        id: install
+        uses: ./
+        with:
+          python-version: "3.12"
+          ansible-package: "ansible"
+
+      - name: Verify Ansible and show outputs
+        run: |
+          ansible --version
+          echo "ansible path: $(command -v ansible)"

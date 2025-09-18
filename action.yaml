@@ -1,0 +1,51 @@
+name: Install Ansible via uv
+author: Spooderman
+branding:
+  icon: package
+  color: blue
+
+description: |
+  Composite action to install Ansible on GitHub Actions runners using the uv package manager (astral-sh/uv).
+  Supports installing the full ansible bundle or ansible-core using uv tool (pipx-like) for isolated CLI installs.
+
+inputs:
+  python-version:
+    description: Python version to provision alongside uv (e.g., "3.12").
+    required: false
+    default: "3.12"
+  ansible-package:
+    description: The Ansible package spec to install (e.g., "ansible", "ansible==9.3.0", or "ansible-core==2.16.6").
+    required: false
+    default: "ansible"
+
+runs:
+  using: composite
+  steps:
+    - name: Setup uv and Python
+      uses: astral-sh/setup-uv@v6
+      with:
+        python-version: ${{ inputs.python-version }}
+        enable-cache: true
+
+    - name: Install Ansible with uv tool
+      id: install
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "uv version: $(uv --version)"
+        echo "python version: $(python --version)"
+        PKG="${{ inputs.ansible-package }}"
+        # Ensure the uv tool bin dir is on PATH for later steps
+        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        uv tool install "$PKG"
+
+    - name: Verify installation
+      shell: bash
+      run: |
+        set -euo pipefail
+        if ! command -v ansible >/dev/null 2>&1; then
+          echo "ansible executable not found on PATH after install" >&2
+          exit 1
+        fi
+        ansible --version
+        echo "ansible path: $(command -v ansible)"
