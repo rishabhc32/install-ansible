@@ -6,7 +6,7 @@ branding:
 
 description: |
   Composite action to install Ansible on GitHub Actions runners using the uv package manager (astral-sh/uv).
-  Supports installing the full ansible bundle or ansible-core using uv tool (pipx-like) for isolated CLI installs.
+  Installs the Ansible CLI using uv tool (pipx-like) for isolated CLI installs.
 
 inputs:
   python-version:
@@ -14,18 +14,28 @@ inputs:
     required: false
     default: "3.12"
   ansible-package:
-    description: The Ansible package spec to install (e.g., "ansible", "ansible==9.3.0", or "ansible-core==2.16.6").
+    description: The Ansible package spec to install. Allowed: "ansible" or "ansible==<version>" (e.g., "ansible==9.3.0").
     required: false
     default: "ansible"
+  uv-version:
+    description: Version of uv to install (e.g., "latest", "0.7.13", ">=0.4.0"). Leave empty to use default resolution.
+    required: false
+    default: ""
+  skip-setup-uv:
+    description: Skip running setup-uv in this action. Set to "true" if you already ran setup-uv earlier in the job.
+    required: false
+    default: "false"
 
 runs:
   using: composite
   steps:
     - name: Setup uv and Python
+      if: ${{ inputs.skip-setup-uv != 'true' }}
       uses: astral-sh/setup-uv@v6
       with:
         python-version: ${{ inputs.python-version }}
-        enable-cache: true
+        enable-cache: false
+        version: ${{ inputs.uv-version }}
 
     - name: Install Ansible with uv tool
       id: install
@@ -34,7 +44,20 @@ runs:
         set -euo pipefail
         echo "uv version: $(uv --version)"
         echo "python version: $(python --version)"
-        PKG="${{ inputs.ansible-package }}"
+        PKG_INPUT="${{ inputs.ansible-package }}"
+        if [ -n "$PKG_INPUT" ]; then
+          case "$PKG_INPUT" in
+            ansible|ansible==*)
+              PKG="$PKG_INPUT"
+              ;;
+            *)
+              echo "Only 'ansible' or 'ansible==<version>' is allowed for 'ansible-package'. Got: $PKG_INPUT" >&2
+              exit 1
+              ;;
+          esac
+        else
+          PKG="ansible"
+        fi
         # Ensure the uv tool bin dir is on PATH for later steps
         echo "$HOME/.local/bin" >> "$GITHUB_PATH"
         uv tool install "$PKG"

@@ -1,14 +1,13 @@
-# Install Ansible via uv (Composite Action)
+# Install Ansible via uv
 
-This repository provides a reusable composite GitHub Action that installs Ansible using the [uv](https://github.com/astral-sh/uv) package manager.
+A GitHub Action that installs Ansible using the [uv](https://github.com/astral-sh/uv) package manager. Provides `ansible` and `ansible-playbook` on PATH in seconds.
 
 - Supports installing either the full `ansible` bundle or `ansible-core`.
-- Uses `uv tool install <package>` (pipx-like) to install a standalone CLI into `$HOME/.local/bin`.
-- Exposes the `ansible` path and version as outputs.
+- Uses `uv tool install <package>` (pipx-like) to install a standalone CLI.
 
 ## Usage
 
-Reference in your workflow:
+Quick start:
 
 ```yaml
 name: Use install-ansible via uv
@@ -22,25 +21,37 @@ jobs:
 
       - name: Install Ansible via uv
         id: ansible
-        uses: <your-org-or-user>/<repo-name>@v1
+        uses: rishabhc32/install-ansible@v1
         with:
           python-version: "3.12"
-          ansible-package: "ansible"        # or "ansible-core==2.16.6"
+          ansible-package: "ansible==12.0.0"
 
       - name: Verify
         run: |
           ansible --version
-          echo "Ansible path: $(command -v ansible)"
+          ansible-playbook --version
 ```
 
-To test locally within this repo before publishing, you can point to the local action path:
+### Use with your own setup-uv step
+
+If you prefer to control uv installation yourself, run `astral-sh/setup-uv@v6` first and skip it in this action:
 
 ```yaml
-      - name: Install Ansible via uv (local)
-        id: ansible
-        uses: ./
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
+          version: "0.7.13"
+          enable-cache: false
+      - name: Install Ansible via uv tool only
+        uses: rishabhc32/install-ansible@v1
+        with:
+          skip-setup-uv: "true"
           ansible-package: "ansible"
 ```
 
@@ -49,7 +60,11 @@ To test locally within this repo before publishing, you can point to the local a
 - `python-version` (string, default `"3.12"`)
   - Python version to provision alongside uv.
 - `ansible-package` (string, default `"ansible"`)
-  - Package spec to install, e.g. `ansible`, `ansible==9.3.0`, or `ansible-core==2.16.6`.
+  - Package spec to install, e.g. `ansible`, `ansible==9.3.0`.
+- `uv-version` (string, default empty)
+  - Version of uv to install. Examples: `latest`, `0.7.13`, `>=0.4.0`. If empty, setup-uv uses its default resolution.
+- `skip-setup-uv` (string, default `"false"`)
+  - Set to `"true"` to skip running `setup-uv` in this action when you already ran it earlier in the job.
 
  
 
@@ -63,31 +78,16 @@ This action relies on `astral-sh/setup-uv@v6` and works on GitHub-hosted runners
 
 ```yaml
       - name: Install ansible-core as tool
-        uses: <your-org-or-user>/<repo-name>@v1
+        uses: rishabhc32/install-ansible@v1
         with:
-          ansible-package: "ansible-core==2.16.6"
-```
-
- 
-
-## Publish to GitHub Marketplace
-
-1. Create a release tag following semver (e.g. `v1.0.0`).
-2. Create a major version tag (e.g. `v1`) that points to the latest compatible release. Consumers can then use `@v1`.
-3. Add a comprehensive description, categories, and the provided `branding` in `action.yaml` will display in the marketplace.
-
-Quick commands after pushing to `main`:
-
-```bash
-# Create a release tag
-git tag v1.0.0
-git push origin v1.0.0
-
-# Create/Update major tag
-git tag -f v1
-git push -f origin v1
+          ansible-package: "ansible==2.16.6"
 ```
 
 ## License
 
 MIT (or your preferred license)
+
+## Notes
+
+- This Action installs Ansible via `uv tool install`, which sets up isolated CLI tools and adds them to PATH. It does not install Python packages into the job’s site-packages.
+- If you need to control uv itself or Python resolution, use the `uv-version` input, or run `astral-sh/setup-uv@v6` yourself and set `skip-setup-uv: "true"`.
