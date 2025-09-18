@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Ansible via uv
         id: ansible
-        uses: rishabhc32/install-ansible@v1
+        uses: rishabhc32/install-ansible
         with:
           python-version: "3.12"
           ansible-package: "ansible==12.0.0"
@@ -49,7 +49,7 @@ jobs:
           version: "0.7.13"
           enable-cache: false
       - name: Install Ansible via uv tool only
-        uses: rishabhc32/install-ansible@v1
+        uses: rishabhc32/install-ansible
         with:
           skip-setup-uv: "true"
           ansible-package: "ansible"
@@ -78,7 +78,7 @@ This action relies on `astral-sh/setup-uv@v6` and works on GitHub-hosted runners
 
 ```yaml
       - name: Install ansible-core as tool
-        uses: rishabhc32/install-ansible@v1
+        uses: rishabhc32/install-ansible
         with:
           ansible-package: "ansible==2.16.6"
 ```
