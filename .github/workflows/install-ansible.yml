@@ -2,7 +2,7 @@ name: Install Ansible via uv
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -23,3 +23,5 @@ jobs:
         run: |
           ansible --version
           echo "ansible path: $(command -v ansible)"
+          ansible-playbook --version
+          echo "ansible-playbook path: $(command -v ansible-playbook)"
