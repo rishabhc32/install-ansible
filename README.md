@@ -1,6 +1,6 @@
 # Install Ansible via uv
 
-A GitHub Action that installs Ansible using the [uv](https://github.com/astral-sh/uv) package manager. Provides `ansible` and `ansible-playbook` on PATH in seconds.
+A GitHub Action that installs Ansible. Provides `ansible` and `ansible-playbook` on PATH in seconds.
 
 - Supports installing either the full `ansible` bundle or `ansible-core`.
 - Uses `uv tool install <package>` (pipx-like) to install a standalone CLI.

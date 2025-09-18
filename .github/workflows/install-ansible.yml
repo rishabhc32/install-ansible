@@ -1,4 +1,4 @@
-name: Install Ansible via uv
+name: Install Ansible
 
 on:
   push:
