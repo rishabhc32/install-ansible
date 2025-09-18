@@ -14,7 +14,7 @@ inputs:
     required: false
     default: "3.12"
   ansible-package:
-    description: The Ansible package spec to install. Allowed: "ansible" or "ansible==<version>" (e.g., "ansible==9.3.0").
+    description: 'The Ansible package spec to install. Allowed: "ansible" or "ansible==<version>" (e.g., "ansible==9.3.0").'
     required: false
     default: "ansible"
   uv-version:

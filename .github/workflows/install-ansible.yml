@@ -17,7 +17,7 @@ jobs:
         uses: ./
         with:
           python-version: "3.12"
-          ansible-package: "ansible"
+          ansible-package: "ansible==11.9.0"
 
       - name: Verify Ansible and show outputs
         run: |
