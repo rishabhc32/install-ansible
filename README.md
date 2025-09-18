@@ -73,14 +73,11 @@ jobs:
 This action relies on `astral-sh/setup-uv@v6` and works on GitHub-hosted runners for Ubuntu, macOS, and Windows. The example workflow uses `ubuntu-latest`.
 
 ## Examples
-
-- Install `ansible-core` as a standalone tool:
-
 ```yaml
-      - name: Install ansible-core as tool
-        uses: rishabhc32/install-ansible
-        with:
-          ansible-package: "ansible==2.16.6"
+- name: Install ansible-core as tool
+  uses: rishabhc32/install-ansible
+  with:
+    ansible-package: "ansible==2.16.6"
 ```
 
 ## License
